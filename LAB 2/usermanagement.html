@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LocalStorage User Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .container {
+            width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .btn-submit {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-clear {
+            background: #dc3545;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #f1f1f1;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .message {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Advanced LocalStorage User Management System</h1>
+
+<div class="container">
+
+    <div class="message" id="message"></div>
+
+    <!-- Registration Form -->
+    <form id="userForm">
+        <input type="text" id="name" placeholder="Full Name">
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="text" id="mobile" placeholder="Mobile Number">
+        <input type="password" id="password" placeholder="Password">
+
+        <button type="submit" class="btn-submit">Register User</button>
+    </form>
+
+    <button class="btn-clear" onclick="clearUsers()">Clear All Users</button>
+
+    <!-- User Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Password</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="userTable"></tbody>
+    </table>
+
+</div>
+
+<script>
+    const form = document.getElementById("userForm");
+    const message = document.getElementById("message");
+    const tableBody = document.getElementById("userTable");
+
+    function getUsers() {
+        return JSON.parse(localStorage.getItem("users")) || [];
+    }
+
+    function saveUsers(users) {
+        localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    function displayUsers() {
+        tableBody.innerHTML = "";
+        const users = getUsers();
+
+        users.forEach((user, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.mobile}</td>
+                <td>${user.password}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteUser(${index})">
+                        Delete
+                    </button>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        message.textContent = "";
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        // Validations
+        if (!name || !email || !mobile || !password) {
+            message.textContent = "All fields are mandatory";
+            return;
+        }
+
+        if (!/^\d{10}$/.test(mobile)) {
+            message.textContent = "Mobile number must be 10 digits";
+            return;
+        }
+
+        if (password.length < 6) {
+            message.textContent = "Password must be at least 6 characters";
+            return;
+        }
+
+        let users = getUsers();
+
+        if (users.some(user => user.email === email)) {
+            message.textContent = "Email already registered";
+            return;
+        }
+
+        users.push({ name, email, mobile, password });
+        saveUsers(users);
+
+        form.reset();
+        displayUsers();
+    });
+
+    function deleteUser(index) {
+        let users = getUsers();
+        users.splice(index, 1);
+        saveUsers(users);
+        displayUsers();
+    }
+
+    function clearUsers() {
+        if (confirm("Are you sure you want to delete all users?")) {
+            localStorage.removeItem("users");
+            displayUsers();
+        }
+    }
+
+    displayUsers();
+</script>
+
+</body>
+</html>

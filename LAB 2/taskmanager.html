@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Drag and Drop Task Manager</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .task-input {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .board {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .column {
+            flex: 1;
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            min-height: 250px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .column h2 {
+            text-align: center;
+            color: #444;
+        }
+
+        .task {
+            background: #e9ecef;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: grab;
+        }
+
+        /* STATUS COLORS */
+        .task.inprogress {
+            background: #fff3cd; /* pale yellow */
+        }
+
+        .task.completed {
+            background: #b6f2b6; /* green */
+        }
+
+        .date {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Advanced Drag & Drop Task Manager</h1>
+
+<div class="task-input">
+    <input type="text" id="taskInput" placeholder="Enter task name">
+    <button id="addBtn">Add Task</button>
+</div>
+
+<div class="board">
+    <div class="column" id="todo">
+        <h2>To Do</h2>
+    </div>
+
+    <div class="column" id="progress">
+        <h2>In Progress</h2>
+    </div>
+
+    <div class="column" id="completed">
+        <h2>Completed</h2>
+    </div>
+</div>
+
+<div class="message" id="message"></div>
+
+<script>
+    let taskCounter = 0;
+
+    const addBtn = document.getElementById("addBtn");
+    const taskInput = document.getElementById("taskInput");
+    const message = document.getElementById("message");
+
+    addBtn.addEventListener("click", () => {
+        const text = taskInput.value.trim();
+        if (text === "") return;
+
+        const task = document.createElement("div");
+        task.className = "task";
+        task.draggable = true;
+        task.id = "task-" + taskCounter++;
+
+        const now = new Date();
+        task.innerHTML = `
+            <strong>${text}</strong>
+            <div class="date">
+                Created on: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}
+            </div>
+        `;
+
+        task.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("id", task.id);
+        });
+
+        document.getElementById("todo").appendChild(task);
+        taskInput.value = "";
+    });
+
+    document.querySelectorAll(".column").forEach(column => {
+        column.addEventListener("dragover", e => e.preventDefault());
+
+        column.addEventListener("drop", e => {
+            e.preventDefault();
+            const taskId = e.dataTransfer.getData("id");
+            const task = document.getElementById(taskId);
+
+            column.appendChild(task);
+
+            // RESET STATES
+            task.classList.remove("inprogress", "completed");
+            message.textContent = "";
+
+            // APPLY STATE BASED ON COLUMN
+            if (column.id === "progress") {
+                task.classList.add("inprogress");
+            }
+
+            if (column.id === "completed") {
+                task.classList.add("completed");
+                message.textContent = "Task Completed Successfully";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

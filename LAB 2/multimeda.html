@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5 Audio and Video</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        h2 {
+            margin-top: 30px;
+            color: #444;
+        }
+
+        .media-box {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+
+        video, audio {
+            width: 100%;
+            outline: none;
+        }
+
+        .time {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #555;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>HTML5 Audio and Video Player</h1>
+
+    <!-- Audio Section -->
+    <h2>Audio Player</h2>
+    <div class="media-box">
+        <audio id="audioPlayer" controls>
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            Your browser does not support audio.
+        </audio>
+        <div class="time" id="audioTime">Current Time: 0:00</div>
+    </div>
+
+    <!-- Video Section -->
+    <h2>Video Player</h2>
+    <div class="media-box">
+        <video id="videoPlayer" controls>
+            <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+            Your browser does not support video.
+        </video>
+        <div class="time" id="videoTime">Current Time: 0:00</div>
+    </div>
+</div>
+
+<script>
+    const audio = document.getElementById("audioPlayer");
+    const video = document.getElementById("videoPlayer");
+
+    const audioTime = document.getElementById("audioTime");
+    const videoTime = document.getElementById("videoTime");
+
+    function formatTime(seconds) {
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        return min + ":" + (sec < 10 ? "0" + sec : sec);
+    }
+
+    audio.addEventListener("timeupdate", () => {
+        audioTime.textContent = "Current Time: " + formatTime(audio.currentTime);
+    });
+
+    video.addEventListener("timeupdate", () => {
+        videoTime.textContent = "Current Time: " + formatTime(video.currentTime);
+    });
+</script>
+
+</body>
+</html>
