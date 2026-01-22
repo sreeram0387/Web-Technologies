@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multi-Stage Form</title>
+    <style>
+        body { font-family: Arial; background: #f2f2f2; }
+        .container {
+            width: 450px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .stage { display: none; }
+        .stage.active { display: block; }
+        input { width: 100%; padding: 8px; margin-top: 10px; }
+        button { padding: 8px; margin-top: 10px; width: 100%; }
+        .progress {
+            height: 10px;
+            background: #ddd;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .progress-bar {
+            height: 10px;
+            width: 0%;
+            background: green;
+            border-radius: 5px;
+        }
+        .error { color: red; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Multi-Stage Registration</h3>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <form id="multiForm">
+
+        <!-- Stage 1 -->
+        <div class="stage active">
+            <input type="text" id="name" placeholder="Name">
+            <div class="error" id="err1"></div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="stage">
+            <input type="email" id="email" placeholder="Email">
+            <div class="error" id="err2"></div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="stage">
+            <input type="password" id="password" placeholder="Password">
+            <div class="error" id="err3"></div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="stage">
+            <input type="number" id="age" placeholder="Age">
+            <div class="error" id="err4"></div>
+        </div>
+
+    </form>
+
+    <button onclick="prevStage()">Previous</button>
+    <button onclick="nextStage()">Next</button>
+</div>
+
+<script src="form.js"></script>
+</body>
+</html>
