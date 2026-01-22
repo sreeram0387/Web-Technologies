@@ -1,1 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Intelligent Shopping Cart</title>
+    <style>
+        body { font-family: Arial; background: #f4f4f4; }
+        .cart { width: 400px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 8px; }
+        input, select, button { width: 100%; padding: 8px; margin-top: 8px; }
+        .item { margin-top: 10px; }
+        .total { font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="cart">
+    <h3>Shopping Cart</h3>
+
+    <input type="text" id="name" placeholder="Product Name">
+    <input type="number" id="price" placeholder="Price">
+    <input type="number" id="qty" placeholder="Quantity">
+    <select id="category">
+        <option value="general">General</option>
+        <option value="electronics">Electronics</option>
+        <option value="grocery">Grocery</option>
+    </select>
+
+    <button onclick="addItem()">Add Item</button>
+
+    <input type="text" id="coupon" placeholder="Coupon Code">
+    <button onclick="applyCoupon()">Apply Coupon</button>
+
+    <div id="cartItems"></div>
+
+    <div class="total" id="totalPrice">Total: ₹0</div>
+</div>
+
+<script src="cart.js"></script>
+</body>
+</html>
 
