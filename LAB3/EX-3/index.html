@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Survey Builder</title>
+    <style>
+        body { font-family: Arial; background: #f2f2f2; }
+        .container {
+            width: 450px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .question {
+            margin-bottom: 15px;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+        button {
+            padding: 8px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Survey Form</h3>
+    <form id="surveyForm"></form>
+    <button onclick="submitSurvey()">Submit Survey</button>
+</div>
+
+<script src="survey.js"></script>
+</body>
+</html>
