@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product Search</title>
+<style>
+body{font-family:Arial;text-align:center;margin-top:50px}
+input{padding:10px;width:300px;font-size:16px}
+.card{
+  border:1px solid #ccc;
+  padding:10px;
+  margin:10px auto;
+  width:300px;
+  border-radius:10px;
+  box-shadow:0 0 5px rgba(0,0,0,0.1)
+}
+.name{font-weight:bold}
+.price{color:green}
+.loading{color:orange}
+.error{color:red}
+</style>
+</head>
+<body>
+
+<h2>Product Search</h2>
+<input type="text" id="search" placeholder="Search product...">
+<div id="status"></div>
+<div id="results"></div>
+
+<script>
+// Simulated JSON database (local server data)
+const database={
+products:[
+{name:"Laptop",price:55000,category:"Electronics"},
+{name:"Headphones",price:1500,category:"Electronics"},
+{name:"Shoes",price:2200,category:"Fashion"},
+{name:"Watch",price:3200,category:"Accessories"},
+{name:"Backpack",price:1800,category:"Bags"},
+{name:"Keyboard",price:900,category:"Electronics"}
+]};
+
+const input=document.getElementById("search");
+const results=document.getElementById("results");
+const statusBox=document.getElementById("status");
+
+let timer;
+
+// Fake AJAX request function
+function fetchProducts(query){
+return new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+        if(Math.random()<0.05) reject("Network error"); // simulate error
+        const filtered=database.products.filter(p =>
+            p.name.toLowerCase().includes(query)
+        );
+        resolve(filtered);
+    },600); // simulate server delay
+});
+}
+
+input.addEventListener("input",()=>{
+clearTimeout(timer);
+
+timer=setTimeout(()=>{
+    const query=input.value.trim().toLowerCase();
+    results.innerHTML="";
+    if(!query){statusBox.textContent="";return;}
+
+    statusBox.textContent="Searching...";
+    statusBox.className="loading";
+
+    fetchProducts(query)
+    .then(data=>{
+        results.innerHTML="";
+        if(data.length===0){
+            statusBox.textContent="No results found";
+            return;
+        }
+        statusBox.textContent="";
+
+        data.forEach(p=>{
+            results.innerHTML+=`
+            <div class="card">
+            <div class="name">${p.name}</div>
+            <div class="price">₹${p.price}</div>
+            <div>${p.category}</div>
+            </div>`;
+        });
+    })
+    .catch(()=>{
+        statusBox.textContent="Failed to fetch products";
+        statusBox.className="error";
+    });
+
+},500); // debounce delay
+});
+</script>
+
+</body>
+</html>
