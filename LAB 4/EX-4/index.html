@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Weather Dashboard</title>
+<style>
+body{font-family:Arial;text-align:center;margin-top:60px}
+input{padding:10px;width:250px}
+button{padding:10px}
+#card{
+margin:20px auto;
+padding:20px;
+width:260px;
+border-radius:12px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+display:none
+}
+.loading{color:orange}
+.error{color:red}
+</style>
+</head>
+<body>
+
+<h2>Weather Dashboard</h2>
+
+<input id="city" placeholder="Enter city">
+<button onclick="getWeather()">Search</button>
+
+<div id="status"></div>
+
+<div id="card">
+<h3 id="cname"></h3>
+<p>🌡 Temp: <span id="temp"></span> °C</p>
+<p>💧 Humidity: <span id="hum"></span>%</p>
+<p>☁ Condition: <span id="cond"></span></p>
+</div>
+
+<script>
+// ===== CACHE =====
+let cacheCity="";
+let cacheData=null;
+
+// ===== FUNCTION =====
+function getWeather(){
+const city=document.getElementById("city").value.trim();
+const status=document.getElementById("status");
+const card=document.getElementById("card");
+
+if(!city) return;
+
+status.textContent="Loading...";
+status.className="loading";
+card.style.display="none";
+
+// ===== CACHE CHECK =====
+if(city.toLowerCase()===cacheCity){
+display(cacheData);
+status.textContent="Loaded from cache";
+return;
+}
+
+// ===== API CALL =====
+// replace YOUR_API_KEY with your key from OpenWeather
+fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=76c126c12eb014e2845523a0e59b5869&units=metric`)
+.then(res=>{
+if(res.status===404) throw "City not found";
+if(!res.ok) throw "Server error";
+return res.json();
+})
+.then(data=>{
+cacheCity=city.toLowerCase();
+cacheData=data;
+display(data);
+status.textContent="Success";
+})
+.catch(err=>{
+status.textContent=err;
+status.className="error";
+});
+}
+
+// ===== DISPLAY FUNCTION =====
+function display(data){
+document.getElementById("card").style.display="block";
+document.getElementById("cname").textContent=data.name;
+document.getElementById("temp").textContent=data.main.temp;
+document.getElementById("hum").textContent=data.main.humidity;
+document.getElementById("cond").textContent=data.weather[0].main;
+}
+</script>
+
+</body>
+</html>
