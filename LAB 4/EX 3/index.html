@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Student CRUD AJAX</title>
+<style>
+body{font-family:Arial;text-align:center;margin:30px}
+input{margin:5px;padding:8px}
+button{padding:7px 12px;margin:5px}
+table{margin:auto;border-collapse:collapse;width:70%}
+td,th{border:1px solid #ccc;padding:8px}
+.msg{font-weight:bold}
+.ok{color:green}
+.err{color:red}
+</style>
+</head>
+<body>
+
+<h2>Student Management System</h2>
+
+<!-- FORM -->
+<input id="id" placeholder="Student ID">
+<input id="name" placeholder="Name">
+<input id="dept" placeholder="Department">
+<input id="marks" placeholder="Marks">
+<br>
+<button onclick="createStudent()">Add</button>
+<button onclick="updateStudent()">Update</button>
+
+<div id="msg" class="msg"></div>
+
+<!-- TABLE -->
+<h3>Student List</h3>
+<table>
+<thead>
+<tr><th>ID</th><th>Name</th><th>Dept</th><th>Marks</th><th>Action</th></tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+
+<script>
+// ===== Mock Database =====
+let db=[
+{id:"1",name:"Ram",dept:"CSE",marks:"90"},
+{id:"2",name:"Sam",dept:"ECE",marks:"85"}
+];
+
+// ===== Fake AJAX Server =====
+function server(url,method,data){
+return new Promise((resolve,reject)=>{
+setTimeout(()=>{
+try{
+if(Math.random()<0.03) throw "Server crashed"; // simulate 500
+
+if(method==="GET")
+resolve({status:200,data:db});
+
+else if(method==="POST"){
+db.push(data);
+resolve({status:200,message:"Student added"});
+}
+
+else if(method==="PUT"){
+let s=db.find(x=>x.id===data.id);
+if(!s) resolve({status:404,message:"Student not found"});
+else{
+Object.assign(s,data);
+resolve({status:200,message:"Updated"});
+}
+}
+
+else if(method==="DELETE"){
+let i=db.findIndex(x=>x.id===data.id);
+if(i==-1) resolve({status:404,message:"Student not found"});
+else{
+db.splice(i,1);
+resolve({status:200,message:"Deleted"});
+}
+}
+}catch(e){
+resolve({status:500,message:"Server error"});
+}
+},400);
+});
+}
+
+// ===== Helpers =====
+function showMsg(text,type){
+msg.textContent=text;
+msg.className="msg "+type;
+}
+
+function getForm(){
+return{
+id:id.value.trim(),
+name:name.value.trim(),
+dept:dept.value.trim(),
+marks:marks.value.trim()
+};
+}
+
+function clearForm(){
+id.value=name.value=dept.value=marks.value="";
+}
+
+// ===== READ =====
+function loadStudents(){
+server("/students","GET")
+.then(res=>{
+if(res.status===200){
+table.innerHTML="";
+res.data.forEach(s=>{
+table.innerHTML+=`
+<tr>
+<td>${s.id}</td>
+<td>${s.name}</td>
+<td>${s.dept}</td>
+<td>${s.marks}</td>
+<td>
+<button onclick="deleteStudent('${s.id}')">Delete</button>
+</td>
+</tr>`;
+}
+);
+}else showMsg(res.message,"err");
+});
+}
+
+// ===== CREATE =====
+function createStudent(){
+let data=getForm();
+server("/students","POST",data)
+.then(res=>{
+if(res.status===200){
+showMsg(res.message,"ok");
+loadStudents();
+clearForm();
+}else showMsg(res.message,"err");
+});
+}
+
+// ===== UPDATE =====
+function updateStudent(){
+let data=getForm();
+server("/students","PUT",data)
+.then(res=>{
+if(res.status===200){
+showMsg(res.message,"ok");
+loadStudents();
+clearForm();
+}else showMsg(res.message,"err");
+});
+}
+
+// ===== DELETE =====
+function deleteStudent(id){
+server("/students","DELETE",{id})
+.then(res=>{
+if(res.status===200){
+showMsg(res.message,"ok");
+loadStudents();
+}else showMsg(res.message,"err");
+});
+}
+
+// initial load
+loadStudents();
+</script>
+
+</body>
+</html>
