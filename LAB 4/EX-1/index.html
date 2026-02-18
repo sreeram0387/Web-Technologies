@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Username Checker</title>
+<style>
+body{font-family:Arial;text-align:center;margin-top:80px}
+input{padding:8px;width:200px}
+button{padding:8px 15px;margin-top:10px}
+#msg{margin-top:10px;font-weight:bold}
+.loading{color:orange}
+.ok{color:green}
+.err{color:red}
+</style>
+</head>
+<body>
+
+<h2>Register</h2>
+
+<form id="form">
+<input type="text" id="username" placeholder="Enter username" required><br>
+<div id="msg"></div>
+<button type="submit">Submit</button>
+</form>
+
+<script>
+const input = document.getElementById("username");
+const msg = document.getElementById("msg");
+const form = document.getElementById("form");
+let available = false;
+
+input.addEventListener("input", () => {
+    const name = input.value.trim();
+    if(!name){ msg.textContent=""; return; }
+
+    msg.textContent = "Checking...";
+    msg.className="loading";
+
+    fetch("users.json")
+    .then(res=>res.json())
+    .then(data=>{
+        if(data.users.includes(name)){
+            msg.textContent="Username already taken";
+            msg.className="err";
+            available=false;
+        }else{
+            msg.textContent="Username available";
+            msg.className="ok";
+            available=true;
+        }
+    })
+    .catch(()=> {
+        msg.textContent="Error checking username";
+        msg.className="err";
+    });
+});
+
+form.addEventListener("submit", e=>{
+    if(!available){
+        e.preventDefault();
+        alert("Username not available!");
+    }
+});
+</script>
+
+</body>
+</html>
