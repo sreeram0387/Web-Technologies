@@ -1,0 +1,7 @@
+[
+  {"name":"iPhone 15","price":799,"category":"Mobile"},
+  {"name":"Samsung Galaxy S23","price":699,"category":"Mobile"},
+  {"name":"Dell XPS 13","price":999,"category":"Laptop"},
+  {"name":"Sony Headphones","price":199,"category":"Accessories"},
+  {"name":"Apple Watch","price":399,"category":"Wearable"}
+]
