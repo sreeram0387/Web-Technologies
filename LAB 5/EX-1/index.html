@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Employee System</title>
+<style>
+table,th,td{border:1px solid black;border-collapse:collapse;padding:6px}
+</style>
+</head>
+<body>
+
+<h2>Employee Management</h2>
+
+<input id="id" placeholder="ID">
+<input id="name" placeholder="Name">
+<input id="dept" placeholder="Department">
+<input id="sal" placeholder="Salary">
+
+<button onclick="addEmp()">Add</button>
+<button onclick="loadXML()">Refresh</button>
+
+<p id="msg"></p>
+
+<table id="tbl">
+<tr><th>ID</th><th>Name</th><th>Dept</th><th>Salary</th><th>Action</th></tr>
+</table>
+
+<script src="script.js"></script>
+</body>
+</html>
