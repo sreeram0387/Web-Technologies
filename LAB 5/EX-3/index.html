@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Records</title>
+<style>
+table,th,td{border:1px solid black;border-collapse:collapse;padding:6px}
+</style>
+</head>
+<body>
+
+<h2>Student Record System</h2>
+
+<input id="id" placeholder="ID">
+<input id="name" placeholder="Name">
+<input id="course" placeholder="Course">
+<input id="marks" placeholder="Marks">
+
+<button onclick="add()">Add</button>
+<button onclick="load()">Refresh</button>
+
+<p id="msg"></p>
+
+<table id="tbl">
+<tr><th>ID</th><th>Name</th><th>Course</th><th>Marks</th><th>Action</th></tr>
+</table>
+
+<script src="script.js"></script>
+</body>
+</html>
