@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Library Tracker</title>
+<style>
+table,th,td{border:1px solid black;border-collapse:collapse;padding:6px}
+</style>
+</head>
+<body>
+
+<h2>Library Book Tracker</h2>
+
+<input id="id" placeholder="Book ID">
+<input id="title" placeholder="Title">
+<input id="author" placeholder="Author">
+
+<button onclick="addBook()">Add</button>
+<button onclick="loadXML()">Refresh</button>
+
+<p id="msg"></p>
+
+<table id="tbl">
+<tr><th>ID</th><th>Title</th><th>Author</th><th>Status</th><th>Action</th></tr>
+</table>
+
+<script src="script.js"></script>
+</body>
+</html>
