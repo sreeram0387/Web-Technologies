@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Course Enrollment System</title>
+</head>
+<body>
+
+<h2>Course Enrollment</h2>
+
+Course Name: <input type="text" id="course"><br><br>
+Instructor Name: <input type="text" id="instructor"><br><br>
+Seats Available (true/false): <input type="text" id="seats"><br><br>
+
+<button onclick="enroll()">Enroll</button>
+
+<pre id="output"></pre>
+
+<script>
+
+class Course {
+    constructor(courseName, instructor) {
+        this.courseName = courseName;
+        this.instructor = instructor;
+    }
+
+    displayCourse() {
+        return `Course: ${this.courseName}, Instructor: ${this.instructor}`;
+    }
+}
+
+function enroll(){
+
+let courseName = document.getElementById("course").value;
+let instructor = document.getElementById("instructor").value;
+let seatsAvailable = document.getElementById("seats").value === "true";
+
+let course1 = new Course(courseName, instructor);
+
+let result = course1.displayCourse() + "\n";
+
+let enrollCourse = new Promise((resolve, reject) => {
+    if(seatsAvailable)
+        resolve("Enrollment Successful");
+    else
+        reject("Course Full");
+});
+
+enrollCourse
+.then(msg => {
+    result += msg;
+    document.getElementById("output").textContent = result;
+})
+.catch(err => {
+    result += err;
+    document.getElementById("output").textContent = result;
+});
+
+}
+
+</script>
+
+</body>
+</html>
